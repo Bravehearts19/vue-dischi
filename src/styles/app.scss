@@ -1,0 +1,50 @@
+@import "~bootstrap/scss/bootstrap";
+@import "variables.scss";
+
+body {
+    background-color: $bg-body;
+    header {
+        background-color: $bg-card;
+        object-fit: contain;
+        img {
+            height: 70px;
+            padding: 10px;
+        }
+    }
+    .card {
+        background-color: $bg-card;
+        color: white;
+        text-align: center;
+        height: 100%;
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            li {
+                margin: 0;
+                padding: 0;
+                span {
+                    color: $author-text-color;
+                    margin: 0;
+                    padding: 0;
+                    &.author_span {
+                        font-size: 13px;
+                        font-weight: 500;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    &.year_span {
+                        font-size: 11px;
+                        margin: 0;
+                        padding: 0;
+                    }
+                }
+            }
+        }
+    }
+}
