@@ -1,5 +1,6 @@
 <template>
     <div class="card">
+<!--     <div class="card" v-if="genre !== activeGenre"> -->
         <img class="card-img-top" :src="poster" alt="" />
         <div class="card-body">
             <h5 class="card-title">{{ title }}</h5>

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row row-cols-1 row-cols-md-5 g-4 my-5">
-            <div class="col" v-for="(album, i) in albumsList" :key="i">
+            <div class="col" v-for="(album, i) in filteredAlbumsList" :key="i">
                 <AlbumCard :poster="album.poster" :title="album.title" :author="album.author" :genre="album.genre" :year="album.year"></AlbumCard>
             </div>
         </div>
@@ -24,7 +24,20 @@ export default {
         return {
             albumsList: [],
             loading: true,
+            activeFilter: "Rock"
         };
+    },
+    computed: {
+        filteredAlbumsList() {
+            this.fetchData(this.url);
+            let filteredAlbumsList = this.albumsList;
+            if (this.activeFilter !== "") {
+                filteredAlbumsList = this.albumsList.filter((album)=> {
+                    return album.genre === this.activeFilter;
+                })
+            }
+            return filteredAlbumsList
+        }
     },
     methods: {
         fetchData(url) {
