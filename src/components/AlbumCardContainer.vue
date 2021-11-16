@@ -1,6 +1,6 @@
 <template>
     <div class="row_container">
-        <GenreSelect @onSelectedGenre="onSelectedGenre" :genresList="genresList"/>
+        <Select @onSelectedGenre="onSelectedGenre" @onSelectedAuthor="onSelectedAuthor" :genresList="genresList" :authorsList="authorsList"/>
         <div class="row row-cols-1 row-cols-md-5 g-4 my-5">
             <div class="col" v-for="(album, i) in filteredAlbumsList" :key="i">
                 <AlbumCard :poster="album.poster" :title="album.title" :author="album.author" :genre="album.genre" :year="album.year"></AlbumCard>
@@ -14,28 +14,34 @@
 import axios from "axios";
 import AlbumCard from './AlbumCard.vue'
 import Loader from './Loader.vue';
-import GenreSelect from './GenreSelect.vue';
+import Select from './Select.vue';
 
 export default {
     name: "AlbumCardContainer",
     components: {
         AlbumCard,
         Loader,
-        GenreSelect,
+        Select,
     },
     data() {
         return {
             albumsList: [],
             loading: true,
-            activeFilter: "Rock"
+            activeGenreFilter: "",
+            activeAuthorFilter: "",
         };
     },
     computed: {
         filteredAlbumsList() {
             let filteredAlbumsList = this.albumsList;
-            if (this.activeFilter !== "") {
+            if (this.activeGenreFilter !== "") {
                 filteredAlbumsList = this.albumsList.filter((album)=> {
-                    return album.genre === this.activeFilter;
+                    return album.genre === this.activeGenreFilter;
+                })
+            }
+            if (this.activeAuthorFilter !== "") {
+                filteredAlbumsList = this.albumsList.filter((album)=> {
+                    return album.author === this.activeAuthorFilter;
                 })
             }
             return filteredAlbumsList
@@ -48,7 +54,16 @@ export default {
                 }
             });
             return genresList
-        }
+        },
+        authorsList() {
+            let authorsList = []
+            this.albumsList.forEach((album) => {
+                if(!authorsList.includes(album.author)) {
+                    authorsList.push(album.author)
+                }
+            });
+            return authorsList
+        },
     },
     methods: {
         fetchData(url) {
@@ -61,7 +76,10 @@ export default {
             });
         },
         onSelectedGenre(selectedGenre) {
-            this.activeFilter = selectedGenre;
+            this.activeGenreFilter = selectedGenre;
+        },
+        onSelectedAuthor(selectedAuthor) {
+            this.activeAuthorFilter = selectedAuthor;
         },
     },
     mounted() {
