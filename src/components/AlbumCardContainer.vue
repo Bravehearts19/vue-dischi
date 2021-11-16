@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div class="row_container">
+        <GenreSelect @onSelectedGenre="onSelectedGenre" :genresList="genresList"/>
         <div class="row row-cols-1 row-cols-md-5 g-4 my-5">
             <div class="col" v-for="(album, i) in filteredAlbumsList" :key="i">
                 <AlbumCard :poster="album.poster" :title="album.title" :author="album.author" :genre="album.genre" :year="album.year"></AlbumCard>
@@ -13,12 +14,14 @@
 import axios from "axios";
 import AlbumCard from './AlbumCard.vue'
 import Loader from './Loader.vue';
+import GenreSelect from './GenreSelect.vue';
 
 export default {
     name: "AlbumCardContainer",
     components: {
         AlbumCard,
         Loader,
+        GenreSelect,
     },
     data() {
         return {
@@ -29,7 +32,6 @@ export default {
     },
     computed: {
         filteredAlbumsList() {
-            this.fetchData(this.url);
             let filteredAlbumsList = this.albumsList;
             if (this.activeFilter !== "") {
                 filteredAlbumsList = this.albumsList.filter((album)=> {
@@ -37,6 +39,15 @@ export default {
                 })
             }
             return filteredAlbumsList
+        },
+        genresList() {
+            let genresList = []
+            this.albumsList.forEach((album) => {
+                if(!genresList.includes(album.genre)) {
+                    genresList.push(album.genre)
+                }
+            });
+            return genresList
         }
     },
     methods: {
@@ -46,8 +57,11 @@ export default {
                 this.albumsList = resp.data.response;
                 setTimeout(() => {
                     this.loading = false;
-                }, 6000);
+                }, 1000);
             });
+        },
+        onSelectedGenre(selectedGenre) {
+            this.activeFilter = selectedGenre;
         },
     },
     mounted() {
